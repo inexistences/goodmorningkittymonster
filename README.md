@@ -193,16 +193,21 @@ Drop the file, plus optionally:
   `2024-08-19-the-one-about-rain.lyrics.txt`
 - **Sidecar JSON** for title/duration/note.
 
-Inside `.lyrics.txt`, lines that are exactly `Verse 1.`, `Chorus.`,
-`Bridge.`, `Outro.` (etc.) are auto-styled as section labels.
+Inside `.lyrics.txt`, lines that are exactly `[intro]`, `[verse]`,
+`[chorus]`, `[bridge]`, `[outro]` (or anything else in square brackets,
+e.g. `[pre-chorus]`, `[hook]`) are auto-styled as section labels.
 
 ```
-Verse 1.
+[intro]
+
+(soft piano)
+
+[verse]
 
 You said the rain in this town
 lands like it means something —
 
-Chorus.
+[chorus]
 
 I'm a slow learner
 but I am learning.

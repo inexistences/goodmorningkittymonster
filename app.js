@@ -162,37 +162,28 @@
       n.textContent = entry.note;
       left.appendChild(n);
     }
-    // player
+    // player — wired to the shared audio singleton (audio.js)
     const player = document.createElement('div');
     player.className = 'player player-bar';
-    const pb = document.createElement('button');
-    pb.className = 'play-btn';
-    pb.innerHTML = '<span class="tri"></span>';
-    pb.addEventListener('click', () => pb.classList.toggle('is-playing'));
-    player.appendChild(pb);
-    const sc = document.createElement('div');
-    sc.className = 'scrub';
-    const fl = document.createElement('div');
-    fl.className = 'scrub-fill';
-    sc.appendChild(fl);
-    player.appendChild(sc);
-    const tt = document.createElement('span');
-    tt.className = 'scrub-time';
-    tt.textContent = `0:00 / ${entry.duration || ''}`;
-    player.appendChild(tt);
+    player.appendChild(window.GMK_GRIDS.makePlayBtn(entry));
+    const { scrub, time } = window.GMK_GRIDS.makeScrub(entry);
+    player.appendChild(scrub);
+    player.appendChild(time);
     left.appendChild(player);
     inner.appendChild(left);
 
     const right = document.createElement('div');
     right.className = 'lyrics';
     if (entry.lyrics) {
-      // light formatting: a line starting with "Verse 1." or "Chorus." gets a label
+      // A line that's just `[intro]`, `[verse]`, `[chorus]`, `[bridge]`,
+      // `[outro]` (or anything in brackets, really) becomes a section label.
       const lines = entry.lyrics.split('\n');
       let html = '';
       lines.forEach((ln) => {
         const t = ln.trim();
-        if (/^(verse \d+\.?|chorus\.?|bridge\.?|outro\.?|pre[- ]?chorus\.?)$/i.test(t)) {
-          html += `<span class="stanza-label">${escapeHtml(t.replace(/\.$/, ''))}</span>`;
+        const m = t.match(/^\[([^\]]+)\]$/);
+        if (m) {
+          html += `<span class="stanza-label">${escapeHtml(m[1])}</span>`;
         } else {
           html += escapeHtml(ln) + '\n';
         }

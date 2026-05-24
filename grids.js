@@ -148,6 +148,12 @@
   }
 
   function fmtDur(s) { return s || '0:00'; }
+  function fmtSec(sec) {
+    if (!isFinite(sec) || sec < 0) sec = 0;
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  }
 
   // tiny static waveform svg
   function waveformSVG(seed) {
@@ -209,23 +215,16 @@
 
     const player = document.createElement('div');
     player.className = 'player player-bar';
-    player.appendChild(makePlayBtn());
-    const scrub = document.createElement('div');
-    scrub.className = 'scrub';
-    const fill = document.createElement('div');
-    fill.className = 'scrub-fill';
-    scrub.appendChild(fill);
+    player.appendChild(makePlayBtn(entry));
+    const { scrub, time } = makeScrub(entry);
     player.appendChild(scrub);
-    const time = document.createElement('span');
-    time.className = 'scrub-time';
-    time.textContent = `0:00 / ${fmtDur(entry.duration)}`;
     player.appendChild(time);
     info.appendChild(player);
 
     card.appendChild(info);
 
     card.addEventListener('click', (e) => {
-      if (e.target.closest('.play-btn') || e.target.closest('.dogear')) return;
+      if (e.target.closest('.play-btn') || e.target.closest('.dogear') || e.target.closest('.scrub')) return;
       window.GMK.openSong(entry);
     });
     return card;
@@ -246,7 +245,14 @@
     const dur = document.createElement('div');
     dur.className = 'm-dur';
     dur.textContent = fmtDur(entry.duration);
-    const play = makePlayBtn();
+    if (entry.src) {
+      window.GMK_AUDIO.subscribe(entry.id, {
+        onProgress: ({ current, duration }) => {
+          if (duration > 0) dur.textContent = `${fmtSec(current)} / ${fmtSec(duration)}`;
+        },
+      });
+    }
+    const play = makePlayBtn(entry);
 
     card.appendChild(dogear(entry, card));
     card.appendChild(date);
@@ -257,7 +263,7 @@
     return card;
   }
 
-  function makePlayBtn() {
+  function makePlayBtn(entry) {
     const b = document.createElement('button');
     b.className = 'play-btn';
     b.setAttribute('aria-label', 'Play');
@@ -266,10 +272,76 @@
     b.appendChild(t);
     b.addEventListener('click', (e) => {
       e.stopPropagation();
-      b.classList.toggle('is-playing');
-      // Audio playback is a placeholder for prototype.
+      if (entry && entry.src) {
+        window.GMK_AUDIO.toggle(entry);
+      } else {
+        // no audio file attached yet — fall back to visual toggle so the UI still demos
+        b.classList.toggle('is-playing');
+      }
     });
+    if (entry && entry.src) {
+      window.GMK_AUDIO.subscribe(entry.id, {
+        onState: ({ playing }) => {
+          b.classList.toggle('is-playing', playing);
+          b.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+        },
+      });
+    }
     return b;
+  }
+
+  // scrub + time pair, wired to the shared audio singleton.
+  // Returns { scrub, time } — caller decides where to drop them in the DOM.
+  function makeScrub(entry) {
+    const scrub = document.createElement('div');
+    scrub.className = 'scrub';
+    scrub.setAttribute('role', 'slider');
+    scrub.setAttribute('aria-label', 'Seek');
+    const fill = document.createElement('div');
+    fill.className = 'scrub-fill';
+    scrub.appendChild(fill);
+
+    const time = document.createElement('span');
+    time.className = 'scrub-time';
+    time.textContent = `0:00 / ${fmtDur(entry.duration)}`;
+
+    if (entry && entry.src) {
+      let liveDuration = 0;
+      window.GMK_AUDIO.subscribe(entry.id, {
+        onProgress: ({ current, duration }) => {
+          if (duration > 0) liveDuration = duration;
+          const d = liveDuration || 0;
+          const ratio = d > 0 ? Math.min(1, current / d) : 0;
+          fill.style.width = `${ratio * 100}%`;
+          time.textContent = `${fmtSec(current)} / ${d > 0 ? fmtSec(d) : fmtDur(entry.duration)}`;
+        },
+      });
+
+      const seekFrom = (clientX) => {
+        const rect = scrub.getBoundingClientRect();
+        const r = (clientX - rect.left) / rect.width;
+        window.GMK_AUDIO.seekRatio(entry.id, r);
+      };
+      scrub.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // if nothing's playing yet, start it before seeking so the seek takes effect
+        if (!window.GMK_AUDIO.isPlaying(entry.id) &&
+            window.GMK_AUDIO.getProgress(entry.id).duration === 0) {
+          window.GMK_AUDIO.toggle(entry);
+          // seek shortly after metadata loads
+          const off = window.GMK_AUDIO.subscribe(entry.id, {
+            onProgress: ({ duration }) => {
+              if (duration > 0) { seekFrom(e.clientX); off(); }
+            },
+          });
+        } else {
+          seekFrom(e.clientX);
+        }
+      });
+      scrub.style.cursor = 'pointer';
+    }
+
+    return { scrub, time };
   }
 
   // ---- main render ----
@@ -396,5 +468,5 @@
 
   function renderCurrent() { if (currentSlice) renderPage(currentSlice); }
 
-  window.GMK_GRIDS = { renderPage, fmtDate, fmtShort, md, placeholderCover };
+  window.GMK_GRIDS = { renderPage, fmtDate, fmtShort, fmtSec, fmtDur, md, placeholderCover, makePlayBtn, makeScrub };
 })();
