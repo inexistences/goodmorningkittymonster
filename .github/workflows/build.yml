@@ -1,0 +1,47 @@
+name: Build content.json
+
+# Run on every push to main, except when the push only touches content.json
+# itself (so we don't loop after the action commits).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Allow the action to commit back to the repo.
+permissions:
+  contents: write
+
+# Cancel an old run if a new push lands while the previous one is still running.
+concurrency:
+  group: build-content
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Skip the run if this commit was made by the action itself.
+    if: "!contains(github.event.head_commit.message, '[skip-rebuild]')"
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run build.js
+        run: node build.js
+
+      - name: Commit content.json if changed
+        run: |
+          git config user.name  "gmk-bot"
+          git config user.email "gmk-bot@users.noreply.github.com"
+          git add content.json
+          if git diff --cached --quiet; then
+            echo "No changes to content.json."
+          else
+            git commit -m "Auto-rebuild content.json [skip-rebuild]"
+            git push
+          fi
