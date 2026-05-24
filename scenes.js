@@ -6,7 +6,7 @@
   // x/y are top-left; w/h are width/height. Slightly generous per brief.
   const SCENES = {
     desk: {
-      img: 'assets/desk.png',
+      img: 'assets/desk.jpg',
       hotspots: [
         // letter stack — large white paper, right side
         { x: 0.605, y: 0.04, w: 0.41, h: 0.46, label: 'Letters', target: 'letters' },
@@ -17,7 +17,7 @@
       ],
     },
     letters: {
-      img: 'assets/letters.png',
+      img: 'assets/letters.jpg',
       hotspots: [
         // "Anniversary" stack (left)
         { x: 0.085, y: 0.255, w: 0.21, h: 0.34, label: 'Anniversary',          target: 'grid:letters/anniversary' },
@@ -30,7 +30,7 @@
       ],
     },
     photos: {
-      img: 'assets/photos.png',
+      img: 'assets/photos.jpg',
       hotspots: [
         // Blue-haired portrait (upper-left polaroid)
         { x: 0.170, y: 0.245, w: 0.21, h: 0.34, label: 'Portraits', target: 'grid:photos/portraits' },
@@ -43,7 +43,7 @@
       ],
     },
     audio: {
-      img: 'assets/audio.png',
+      img: 'assets/audio.jpg',
       hotspots: [
         // CD case ('I made dis')
         { x: 0.135, y: 0.275, w: 0.385, h: 0.515, label: 'Songs',       target: 'grid:audio/song'       },
