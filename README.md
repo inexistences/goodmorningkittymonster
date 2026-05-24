@@ -1,251 +1,266 @@
 # How to add new content
 
-This site is driven by **one file**: `content.json`. Every letter, photo,
-video, and audio note in the site is an entry inside that file. To add
-something new, you'll:
-
-1. (For photos / video / audio only) upload the file to the right folder.
-2. Open `content.json` and add a small block of text describing your entry.
-3. Click **Commit changes** in GitHub — the site updates in under a minute.
-
-You can do **all of this in your web browser, on github.com**, with no
-software installed.
-
 > First time deploying the site? Read **`HOSTING.md`** first.
 
----
+This site rebuilds itself automatically every time you push to GitHub.
+You add content by **dropping files into the right folder** in the repo.
+You never edit `content.json` by hand.
 
-## The four content types
+The flow:
 
-| Type      | Goes in                              | Subcategories                                                |
-|-----------|--------------------------------------|--------------------------------------------------------------|
-| **Letter** | inside `content.json` (no file)     | `anniversary` · `things-ive-said` · `things-ive-not-yet-said` |
-| **Photo**  | upload to `photos/` folder          | `portraits` · `home` · `trips` · `us`                        |
-| **Video**  | upload to `videos/` folder          | `portraits` · `home` · `trips` · `us`                        |
-| **Audio**  | upload to `audio/` folder           | `song` · `voice-memo`                                        |
+1. Add a file in the right folder (named correctly).
+2. Commit and push in GitHub Desktop.
+3. About 60 seconds later, your change is live on
+   `goodmorningkittymonster.com`.
 
-> Subcategory names must be spelled **exactly** as shown above — lowercase,
-> with dashes, no spaces. Typos = the entry won't show up in any room.
-
----
-
-## The basic rhythm
-
-Every time you add something, you'll open `content.json` in GitHub like this:
-
-1. In your repo, click `content.json`.
-2. Click the **pencil icon** (top right) to edit it.
-3. Find the closing `}` of the **last entry** (near the bottom of the file).
-4. Add a comma after that `}`, then paste in your new entry block.
-5. Scroll to the bottom of the page, write a short note in the commit box
-   like *"Add letter: Wednesday Morning"*, and click **Commit changes**.
-
-The site rebuilds itself within ~60 seconds.
-
-> **A safety tip:** before you commit, check the bottom of the page where
-> GitHub shows green "+" and red "−" markers. If you accidentally deleted
-> something, it'll be obvious. If you broke the JSON syntax, GitHub will
-> still let you commit, but the site won't load — so always **open the
-> site after committing** to check. If it's broken, just revert the
-> commit (Commits → click your commit → "Revert").
+That's it. The folder it goes in decides which room/grid it shows up in.
 
 ---
 
-## Adding a letter
+## Folder structure
 
-Letters are pure text, no files to upload. Paste this block into
-`content.json` (with a comma before it, after the last existing entry):
+Everything goes inside the `content/` folder at the top of the repo:
 
+```
+content/
+├── letters/
+│   ├── anniversary/
+│   ├── things-ive-said/
+│   └── things-ive-not-yet-said/
+├── photos/
+│   ├── portraits/
+│   ├── home/
+│   ├── trips/
+│   │   └── <Trip-Name>/
+│   └── us/
+├── videos/
+│   ├── portraits/
+│   ├── home/
+│   ├── trips/
+│   │   └── <Trip-Name>/
+│   └── us/
+└── audio/
+    ├── song/
+    └── voice-memo/
+```
+
+Subcategory names must match these folder names **exactly** (lowercase,
+with dashes, no spaces).
+
+---
+
+## Filename rules (the only rule, really)
+
+Every content file is named:
+
+```
+YYYY-MM-DD-some-slug.ext
+```
+
+- **`YYYY-MM-DD`** — the date that shows on the card and controls the
+  sort order. Newest first.
+- **`some-slug`** — short kebab-case label, e.g. `quiet-hours`,
+  `beach-walk`, `morning-coffee`. This becomes the on-screen title (with
+  dashes turned into spaces and capitalised) unless you override it.
+- **`.ext`** — the file extension. See per-type tables below.
+
+Anything not matching this pattern is silently ignored, so you can keep
+half-finished drafts (`draft.md`, `notes.txt`) sitting next to real
+content without it leaking into the site.
+
+---
+
+## Letters
+
+**Where:** `content/letters/<subcategory>/`
+**Extension:** `.md`
+
+A letter is a plain-text Markdown file. Minimum viable letter:
+
+```
+---
+title: Quiet Hours
+---
+
+Dear N.,
+
+Body of the letter goes here.
+
+Blank lines split paragraphs. You can use *italics* and **bold**.
+
+— m.
+```
+
+The `---` block at the top is "frontmatter" — optional metadata. Fields:
+
+- **`title`** *(optional)* — what shows in the reader header. If you
+  leave it out, the title is generated from the filename.
+- **`note`** *(optional)* — a one-liner shown above the body, italicised.
+  e.g. `Written the morning of.`
+- **`lang`** *(optional)* — defaults to `en`. Only matters if you
+  display lyrics in multiple languages.
+
+Everything after the second `---` is the body. Blank lines = new paragraphs.
+
+**Subcategories:**
+- `anniversary` — yearly markers, milestone letters
+- `things-ive-said` — things you've already said to her
+- `things-ive-not-yet-said` — things you haven't (yet, or ever)
+
+---
+
+## Photos
+
+**Where:** `content/photos/<subcategory>/` *(or `trips/<Trip-Name>/`)*
+**Extensions:** `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`
+
+Just drop the photo in the right folder. Done.
+
+For **trips**, make a subfolder for each trip:
+
+```
+content/photos/trips/Japan-2025/2025-06-14-shibuya-2am.jpg
+content/photos/trips/Japan-2025/2025-06-11-kyoto-rain.jpg
+content/photos/trips/USA-2024/2024-09-30-utah-cliffside.jpg
+```
+
+The trip filter in the Trips grid is built from those folder names.
+Use whatever names you want (`Japan-2025`, `road-trip`, `paris`, etc.).
+
+### Optional metadata
+
+If you want a custom title, a caption, or accessibility alt-text, add a
+sidecar JSON file with the same base name:
+
+`content/photos/portraits/2025-11-09-blue-hours.json`
 ```json
 {
-  "id": "2026-06-01-the-tuesday-one",
-  "type": "letter",
-  "date": "2026-06-01",
-  "title": "The Tuesday One",
-  "subcategory": "things-ive-said",
-  "note": "Optional one-liner shown above the body.",
-  "lang": "en",
-  "body": "First paragraph goes here.\n\nNew paragraph after a blank line.\n\nYou can use *italics* and **bold**.\n\nSign off however you like.\n\n— m."
+  "title": "The Blue Hours",
+  "note": "First week after the dye job.",
+  "alt": "Portrait, blue hair, late afternoon light."
 }
 ```
 
-What to change:
-- **`id`** — must be unique. The format `YYYY-MM-DD-some-slug` is the
-  convention; just match the date and add a short slug.
-- **`date`** — `YYYY-MM-DD` only. This is what shows on the card and
-  controls sort order.
-- **`title`** — what the card and reader header show.
-- **`subcategory`** — one of: `anniversary`, `things-ive-said`,
-  `things-ive-not-yet-said`. This decides which room/grid the letter
-  shows up in.
-- **`note`** — optional. Delete this line if you don't want one.
-- **`body`** — your letter. Use `\n\n` (two backslash-n's) between
-  paragraphs. `*one star*` for *italics*, `**two stars**` for **bold**.
+Without this file, the title is generated from the slug
+(`blue-hours` → "Blue Hours") and that's usually fine.
 
 ---
 
-## Adding a photo
+## Videos
 
-1. **Upload the photo** to the `photos/` folder in your repo:
-   - In your repo, click the `photos` folder. If it doesn't exist yet,
-     click **Add file → Create new file**, type `photos/.gitkeep` in the
-     name box, and commit — this creates the folder.
-   - Then click **Add file → Upload files**, drag in your photo, commit.
-   - **Name it like** `2026-06-01-beach-walk.jpg` (date prefix is a habit;
-     anything works as long as it's unique).
-2. Add this block to `content.json`:
+**Where:** `content/videos/<subcategory>/` *(or `trips/<Trip-Name>/`)*
+**Extensions:** `.mp4`, `.mov`, `.webm`, `.m4v`
 
-```json
-{
-  "id": "2026-06-01-beach-walk",
-  "type": "photo",
-  "date": "2026-06-01",
-  "title": "Beach Walk",
-  "subcategory": "trips",
-  "trip": "Portugal-2026",
-  "note": "Optional caption.",
-  "src": "photos/2026-06-01-beach-walk.jpg",
-  "alt": "Two figures walking on wet sand."
-}
+Videos surface inside the photo grids (same subcategories) with a small
+play icon overlaid.
+
+For a thumbnail, **drop a still image with the same base name** next to
+the video:
+
+```
+content/videos/home/2025-03-22-morning-walk.mp4
+content/videos/home/2025-03-22-morning-walk.jpg   ← auto-used as cover
 ```
 
-What to change:
-- **`src`** — the path to your uploaded photo, starting with `photos/`.
-- **`subcategory`** — `portraits`, `home`, `trips`, or `us`.
-- **`trip`** — **only for `trips`**. Used to group photos by trip in the
-  Trips grid (e.g. `Portugal-2026`, `Japan-2025`). Use the same value for
-  every photo from the same trip. **Delete this line for non-trip
-  photos.**
-- **`alt`** — short description for accessibility. Doesn't show on screen.
-
----
-
-## Adding a video
-
-1. **Upload the video file** to `videos/` (create the folder the same way
-   as for photos if it doesn't exist). Name it like
-   `2026-06-01-morning-walk.mp4`.
-2. *(Optional but recommended)* Upload a still image for the thumbnail
-   with the same base name, e.g. `2026-06-01-morning-walk.jpg`.
-3. Add this block to `content.json`:
+Optional sidecar (`.json`) for title, note, duration:
 
 ```json
 {
-  "id": "2026-06-01-morning-walk",
-  "type": "video",
-  "date": "2026-06-01",
   "title": "Morning Walk",
-  "subcategory": "home",
-  "note": "Optional caption.",
-  "src": "videos/2026-06-01-morning-walk.mp4",
-  "cover": "videos/2026-06-01-morning-walk.jpg",
+  "note": "Your hand. The bridge. The dog we tried to pet.",
   "duration": "0:41"
 }
 ```
 
-What to change:
-- **`subcategory`** — same options as photos: `portraits`, `home`,
-  `trips`, `us`. Videos appear inside the photo grids alongside photos,
-  marked with a small play icon.
-- **`cover`** — path to a still image. Delete the line if you don't have
-  one (a placeholder will show).
-- **`duration`** — `M:SS` format. Cosmetic only.
-- Add a **`trip`** line if `subcategory` is `trips`, same as photos.
+---
+
+## Audio
+
+**Where:** `content/audio/song/` or `content/audio/voice-memo/`
+**Extensions:** `.mp3`, `.m4a`, `.wav`, `.ogg`
+
+### Voice memos
+
+Just drop the file. Optional sidecar for a custom title/note/duration.
+
+### Songs
+
+Drop the file, plus optionally:
+
+- **Cover art** — same base name with `.jpg`/`.png` extension:
+  `2024-08-19-the-one-about-rain.jpg`
+- **Lyrics** — same base name with `.lyrics.txt` extension:
+  `2024-08-19-the-one-about-rain.lyrics.txt`
+- **Sidecar JSON** for title/duration/note.
+
+Inside `.lyrics.txt`, lines that are exactly `Verse 1.`, `Chorus.`,
+`Bridge.`, `Outro.` (etc.) are auto-styled as section labels.
+
+```
+Verse 1.
+
+You said the rain in this town
+lands like it means something —
+
+Chorus.
+
+I'm a slow learner
+but I am learning.
+```
 
 ---
 
-## Adding an audio note
+## Workflow in GitHub Desktop
 
-There are two flavours: **songs** (with a cover image and lyrics) and
-**voice memos** (no cover, no lyrics).
+1. In Finder, open your repo folder in Documents and drop the new
+   file(s) into the right folder under `content/`.
+2. Open GitHub Desktop. You'll see the new files in the left pane.
+3. Bottom-left, write a summary like `Add letter: Wednesday Morning`.
+4. Click **Commit to main**.
+5. Top of the window, click **Push origin**.
+6. Wait ~60 seconds. Refresh the site. Your change is live.
 
-1. Upload the audio to `audio/`, e.g. `2026-06-01-the-rain-one.mp3`.
-2. *(Songs only)* Upload a cover image to `audio/` too, e.g.
-   `2026-06-01-the-rain-one.jpg`.
-3. Add a block:
-
-**For a song:**
-
-```json
-{
-  "id": "2026-06-01-the-rain-one",
-  "type": "audio",
-  "date": "2026-06-01",
-  "title": "The Rain One",
-  "subcategory": "song",
-  "note": "Optional caption.",
-  "src": "audio/2026-06-01-the-rain-one.mp3",
-  "cover": "audio/2026-06-01-the-rain-one.jpg",
-  "duration": "3:42",
-  "lyrics": "Verse 1.\n\nFirst line of the verse\nSecond line of the verse.\n\nChorus.\n\nFirst line of the chorus\nSecond line.\n\nVerse 2.\n\nMore lines."
-}
-```
-
-**For a voice memo:**
-
-```json
-{
-  "id": "2026-06-01-walking-home",
-  "type": "audio",
-  "date": "2026-06-01",
-  "title": "Walking Home",
-  "subcategory": "voice-memo",
-  "src": "audio/2026-06-01-walking-home.m4a",
-  "duration": "0:48"
-}
-```
-
-Notes:
-- **`subcategory`** — `song` or `voice-memo`.
-- **`lyrics`** — songs only. Lines starting with `Verse 1.`, `Chorus.`,
-  `Bridge.` etc. are auto-styled as section labels. Use `\n` for line
-  breaks. Delete the field entirely if you don't have lyrics.
-- Supported audio formats: `.mp3`, `.m4a`, `.wav`, `.ogg`.
+Behind the scenes: when you push, GitHub runs `build.js` for you on
+their servers, which scans every file under `content/`, generates a
+fresh `content.json`, and commits it back to the repo. You'll see this
+extra commit appear in GitHub Desktop's history with the message
+`Auto-rebuild content.json [skip-rebuild]`.
 
 ---
 
-## Removing or editing an entry
+## Removing or editing content
 
-- **Edit:** open `content.json`, change the text inside the entry's block,
-  commit.
-- **Remove:** delete the entire `{ ... }` block (and the comma before it
-  if it was the last entry), commit.
-- **Reorder:** entries are sorted by `date` newest first on each grid —
-  you don't need to reorder by hand. Just change a date.
+- **Remove:** delete the file from the folder, commit, push.
+- **Rename / re-date:** rename the file (the new date or slug becomes the
+  new sort key and ID), commit, push.
+- **Edit a letter:** open the `.md` file in any plain-text editor
+  (TextEdit on Mac, set to **Make Plain Text** via Format menu — *not*
+  rich text), make changes, save, commit, push.
 
 ---
 
 ## Common gotchas
 
-- **Quotes:** every string must be in `"double quotes"`. Don't use curly
-  quotes (`"` `"`) — your phone might auto-correct them. Always edit in
-  GitHub or a plain text editor.
-- **Commas:** every entry except the last needs a `,` after its closing
-  `}`. The last one has no comma.
-- **Backslashes:** inside `body` and `lyrics`, paragraph breaks are `\n\n`
-  and line breaks are `\n`. Two literal characters: backslash + n.
-- **Subcategories are case-sensitive:** `Anniversary` won't work,
-  `anniversary` will.
-- **File paths are case-sensitive:** `photos/Beach.jpg` and
-  `photos/beach.jpg` are different. Match the filename exactly.
-
-If the site stops loading after a commit, you almost certainly have a
-JSON typo. Open the **Commits** tab, find your last commit, and click
-**Revert** — you'll be back online while you figure out what went wrong.
+- **Case matters.** `Portraits/` and `portraits/` are different folders
+  on GitHub. Always lowercase. (Trip folder names can be capitalised —
+  they're just labels.)
+- **Filenames need the date prefix.** `quiet-hours.md` without the
+  `2026-05-19-` prefix won't be picked up. Use this format always.
+- **No spaces in filenames.** `morning walk.jpg` won't work,
+  `2025-03-22-morning-walk.jpg` will.
+- **Plain text only for `.md` files.** TextEdit defaults to rich text on
+  Mac — switch it to plain text (`Format → Make Plain Text`) before
+  saving, or your letter will have invisible junk in it.
+- **If the site doesn't update**, check the **Actions** tab in your
+  repo on github.com — it'll show whether the build succeeded or what
+  went wrong.
 
 ---
 
 ## Advanced (optional)
 
-If you ever want to use the original folder-and-frontmatter workflow
-(drop `.md` files into a `letters/` folder, run `node build.js` to
-auto-generate `content.json`), see `build.js` for how it works. It's
-not necessary — editing `content.json` directly is fully supported.
-
-## Favourites button
-
-The little dog-ear corner on each card is the "kept" toggle. By default
-it remembers favourites in the visitor's browser only (localStorage). If
-you want them synced across devices, follow the Supabase setup at the
-bottom of this README's old version — but for a personal site, the
-browser-only default is fine.
+If you ever want to run the build locally to preview what `content.json`
+will look like before pushing, install Node.js, then run `node build.js`
+inside the repo folder. It writes out `content.json` based on whatever's
+in `content/`. You don't need to do this — the GitHub Action does it for
+you on every push.
