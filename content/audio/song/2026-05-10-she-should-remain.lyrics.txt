@@ -1,0 +1,38 @@
+[intro]
+
+(soft piano, held one bar past the cue)
+
+[verse]
+
+placeholder lyric line one
+placeholder lyric line two
+placeholder lyric line three
+placeholder lyric line four
+
+[chorus]
+
+placeholder chorus line one
+placeholder chorus line two
+placeholder chorus line three
+
+[verse]
+
+placeholder lyric line one
+placeholder lyric line two
+placeholder lyric line three
+
+[bridge]
+
+placeholder bridge line one
+placeholder bridge line two
+
+[chorus]
+
+placeholder chorus line one
+placeholder chorus line two
+placeholder chorus line three
+
+[outro]
+
+placeholder closing line
+(fade)
