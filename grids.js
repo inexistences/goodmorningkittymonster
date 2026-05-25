@@ -57,9 +57,30 @@
     return wrap;
   }
 
-  function placeholderCover() {
+  // Renders a song/album cover. If the entry has a `cover` field (set by
+  // build.js when it finds a sibling .jpg/.png), we render the real image.
+  // Otherwise we fall back to the striped placeholder so the layout doesn't
+  // collapse.
+  function placeholderCover(entry) {
     const wrap = document.createElement('div');
     wrap.className = 'cover';
+    if (entry && entry.cover) {
+      const img = document.createElement('img');
+      img.className = 'cover-img';
+      img.src = entry.cover;
+      img.alt = entry.title ? `Cover for ${entry.title}` : 'Cover';
+      img.loading = 'lazy';
+      // if the image 404s, drop back to the placeholder look
+      img.addEventListener('error', () => {
+        img.remove();
+        const lab = document.createElement('span');
+        lab.className = 'cover-label';
+        lab.textContent = 'COVER';
+        wrap.appendChild(lab);
+      });
+      wrap.appendChild(img);
+      return wrap;
+    }
     const lab = document.createElement('span');
     lab.className = 'cover-label';
     lab.textContent = 'COVER';
@@ -191,7 +212,7 @@
     if (window.GMK_FAV.has(entry.id)) card.classList.add('is-fav');
 
     card.appendChild(dogear(entry, card));
-    card.appendChild(placeholderCover());
+    card.appendChild(placeholderCover(entry));
 
     const info = document.createElement('div');
     info.className = 'info';

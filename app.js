@@ -146,7 +146,7 @@
 
     const left = document.createElement('div');
     left.className = 'song-view-cover';
-    const cover = window.GMK_GRIDS.placeholderCover();
+    const cover = window.GMK_GRIDS.placeholderCover(entry);
     cover.style.width = '380px'; cover.style.height = '380px';
     left.appendChild(cover);
     const sm = document.createElement('div');

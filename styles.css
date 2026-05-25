@@ -547,6 +547,17 @@ body:has(.song-view.is-active) .corner {
   border: 1px dashed oklch(0.55 0.018 78 / .35);
   pointer-events: none;
 }
+/* When a real cover image is present, hide the striped placeholder look. */
+.cover:has(.cover-img) { background: var(--bg); }
+.cover:has(.cover-img)::after { display: none; }
+.cover-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
 .cover-label {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 10px;

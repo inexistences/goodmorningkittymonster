@@ -1,38 +1,68 @@
-[intro]
-
-(soft piano, held one bar past the cue)
+[verse]
+It’s 3 AM and she’s finishing off a bullet
+It’s 3 AM and she’s downed a gin and tonic
+The night has just begun,
+but not necessarily for fun
+Either way she’ll take her time and get it done
 
 [verse]
-
-placeholder lyric line one
-placeholder lyric line two
-placeholder lyric line three
-placeholder lyric line four
+It’s 5 AM and she’s built a new component
+It’s 5 AM and round 2 kicks off in a moment
+The night is still in an early stage
+Her fuel is a mix of party spirit and rage
+Either way she’ll survive long enough to get it done
 
 [chorus]
-
-placeholder chorus line one
-placeholder chorus line two
-placeholder chorus line three
+Her vibe isn’t something announced but unwrapped
+Like light that pulses through a door’s half-open gap
+Like sound seeping from a wall half-broken
+The night ends before she does
+The curtains hesitate because
+Unless you’re brave, she should remain unwoken
 
 [verse]
+It’s 8 AM and she’s just sent off a slide deck
+It’s 8 AM and everyone else is a fucking wreck
+The night is done but she doesn’t slow
+She missed that memo dozens of years ago
+She is surviving long enough to get it done
 
-placeholder lyric line one
-placeholder lyric line two
-placeholder lyric line three
+[verse]
+It’s 10 AM and she’s shutting off her iMac
+It’s 10 AM and the host is sleeping in the back
+It’s time for coffee fill the fucking cup
+Her grab driver has just woken up
+She has survived just long enough to get it done
+
+[chorus]
+Her vibe isn’t something announced but unwrapped
+Like light that pulses through a door’s half-open gap
+Like sound seeping from a wall half-broken
+The night ends before she does
+The curtains hesitate because
+Unless you’re brave…
+she should remain unwoken
 
 [bridge]
+Man what the fuck is up with her
+She lives her life right on the edge
+I can’t keep up but I want to watch
+Watch her balancing on that beautiful edge
+Not for the fall
+Nor the tension of the close call
+But for the moment when life lets her step off that path
+And lets that ethic be guided by her creative half
 
-placeholder bridge line one
-placeholder bridge line two
+[instrumental]
+
+On that day
+I’ll stay awake
 
 [chorus]
-
-placeholder chorus line one
-placeholder chorus line two
-placeholder chorus line three
-
-[outro]
-
-placeholder closing line
-(fade)
+Her vibe isn’t something announced but unwrapped
+Like light that pulses through a door’s half-open gap
+Like sound seeping from a wall half-broken
+The night ends before she does
+Morning breaks but she doesn’t not
+Unless you’re brave…
+she should remain unwoken
