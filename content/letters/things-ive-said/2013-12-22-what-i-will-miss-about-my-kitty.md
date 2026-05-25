@@ -1,6 +1,6 @@
 ---
-title: The Thing About Tuesdays
-note: Recorded after the fact — close to verbatim.
+title: What I will miss about my kitty
+note: Seems we thought about this way back when
 ---
 
 What I will miss about my kitty.
